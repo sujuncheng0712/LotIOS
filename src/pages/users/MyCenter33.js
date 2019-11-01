@@ -149,7 +149,7 @@ export default class App extends React.Component {
                     <Text style={{ textAlign:'center',color:'white',fontSize:10}}>注销</Text>
                   </TouchableOpacity>
                 </View>
-                <View style={{width:'100%',justifyContent:'center',alignItems:'center'}}>
+                <View style={{width:'100%',justifyContent:'center',alignItems:'center',marginTop:25}}>
                   <Text style={{color:'#FF7701',backgroundColor:'white',padding:2,width:'12%',borderRadius:5,textAlign:'center',fontSize:10}}>会员</Text>
                 </View>
             
@@ -403,6 +403,7 @@ const styles = StyleSheet.create({
     top:10,
     right:10,
     flexDirection:'row',
+    marginTop:25,
   },
   miandanImg:{
    width:width*0.4, 

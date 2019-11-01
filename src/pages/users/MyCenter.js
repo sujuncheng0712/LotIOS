@@ -128,7 +128,7 @@ export default class App extends React.Component {
           <ImageBackground
             style={styles.ImageBackground }
             source={require('../../images/usr_info.jpg')}>
-            <View style={{flexDirection:'row',padding:10}}>
+            <View style={{flexDirection:'row',padding:10,marginTop:25}}>
               <Text style={{
                 marginLeft: '75%',
                 color:'white',
