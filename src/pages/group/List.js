@@ -1,6 +1,11 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, AsyncStorage,ScrollView,StyleSheet,DeviceEventEmitter} from 'react-native';
+import {View, Text, TouchableOpacity, AsyncStorage,ScrollView,StyleSheet,DeviceEventEmitter,Platform,Dimensions} from 'react-native';
 const url = 'https://iot2.dochen.cn/api';
+const {height,width} =  Dimensions.get('window');
+// iPhoneX
+const X_WIDTH = 414;
+const X_HEIGHT =896;
+let style='android'
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -20,6 +25,16 @@ export default class App extends React.Component {
 
   // render创建之前
   componentWillMount() {
+    let isInphoneX =  Platform.OS === 'ios' &&
+    ((height === X_HEIGHT && width === X_WIDTH) ||
+        (height === X_WIDTH && width === X_HEIGHT));
+        if (isInphoneX) {
+          style='iphoneX'
+      } else if (Platform.OS === 'ios') {
+          style='iphone'
+      } else {
+         style='android'
+      }
     DeviceEventEmitter.addListener('List', ()=> {this._checkLoginState()})
     // 验证/读取 登陆状态
     this._checkLoginState();
@@ -160,7 +175,7 @@ export default class App extends React.Component {
     }
     return (
       <View style={{flex: 1}}>
-        <View style={styles.top}>
+        <View style={{...styles.top,marginTop:style ==='iphoneX' ? 35 : 10,}}>
           <TouchableOpacity
             style={state==='a' ? styles.button :styles.button2}
             onPress={()=>{this.setState({state:'a'});this.forceUpdate}}
@@ -196,7 +211,6 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   top:{
     flexDirection:'row',
-    marginTop:10,
   },
   button:{
     marginTop:5,

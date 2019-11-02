@@ -7,11 +7,15 @@ import {
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,Dimensions,DeviceEventEmitter
+  ScrollView,Dimensions,Platform
 } from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
-const url = `https://iot2.dochen.cn/api`;
 const {height,width} =  Dimensions.get('window');
+// iPhoneX
+const X_WIDTH = 414;
+const X_HEIGHT =896;
+let style='android'
+const url = `https://iot2.dochen.cn/api`;
 let time = 0;
 export default class App extends React.Component {
   constructor(props) {
@@ -32,7 +36,16 @@ export default class App extends React.Component {
 
   // render创建之前
   componentWillMount() {
-    // 验证/读取 登陆状态
+    let isInphoneX =  Platform.OS === 'ios' &&
+    ((height === X_HEIGHT && width === X_WIDTH) ||
+        (height === X_WIDTH && width === X_HEIGHT));
+        if (isInphoneX) {
+          style='iphoneX'
+      } else if (Platform.OS === 'ios') {
+          style='iphone'
+      } else {
+         style='android'
+      }
     this._checkLoginState();
   }
 
@@ -109,23 +122,28 @@ export default class App extends React.Component {
             <ImageBackground
               style={styles.ImageBackground }
               source={require('../../images/usr_info.jpg')}>
-              <Text style={styles.contact}>{LoginInfo.contact}</Text>
-
+              <View>
+               <Text style={{...styles.contact,marginTop:style ==='iphoneX' ? 25 : 0,}}>{LoginInfo.contact}</Text>
+              </View>
+             <View style={{position:'absolute',flexDirection:'row',top:style ==='iphoneX' ? 35 : 10,right:10}}>
               <TouchableOpacity
-                style={styles.home}
-                onPress={()=>{this.props.navigation.push('ChangePassword',{state:'group'})}}>
-                <Icon name="gear" size={25} color={'#fff'} />
-                <Text style={{color:'white',fontSize:10}}>修改密码</Text>
-              </TouchableOpacity>
+                  style={styles.home}
+                  onPress={()=>{this.props.navigation.push('ChangePassword',{state:'group'})}}>
+                  <Icon name="gear" size={25} color={'#fff'} />
+                  <Text style={{color:'white',fontSize:10}}>修改密码</Text>
+                </TouchableOpacity>
 
-              <TouchableOpacity
-                style={styles.home2}
-                onPress={this.withdraw}>
-                  <Icon name="redo" size={25} color={'#fff'} />
-               <Text style={{color:'white',fontSize:10}}>退出登录</Text>
-              </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.home}
+                  onPress={this.withdraw}>
+                    <Icon name="redo" size={25} color={'#fff'} />
+                <Text style={{color:'white',fontSize:10}}>退出登录</Text>
+                </TouchableOpacity>
+             </View>
 
-              <View style={{width:'100%',alignItems:'center',justifyContent:'center'}}>
+              
+
+              <View style={{width:'100%',alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
               <Text style={{color:'#FF7701',backgroundColor:'#fff',borderRadius:5}}> {
                       isVerdor1 ? ' 品牌商 '
                     : isVerdor2 ? ' 运营商 '
@@ -426,18 +444,9 @@ const styles = StyleSheet.create({
     fontSize:width/20,
   },
   home:{
-    position:'absolute',
-    top:height/70,
-    right:10,
     alignItems:'center',
     justifyContent:'center',
-  },
-  home2:{
-    position:'absolute',
-    top:height/70,
-    right:60,
-    alignItems:'center',
-    justifyContent:'center',
+    marginLeft:5,
   },
   topList:{ 
     flexDirection:'row',

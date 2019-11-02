@@ -4,14 +4,18 @@ import {
   Text,
   AsyncStorage,
   BackHandler,
-  ToastAndroid,
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
-  Image,ScrollView
+  Image,ScrollView,Dimensions
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import Icon from 'react-native-vector-icons/EvilIcons';
+const {height,width} =  Dimensions.get('window');
+// iPhoneX
+const X_WIDTH = 414;
+const X_HEIGHT =896;
+let style='android'
 const url = 'https://iot2.dochen.cn/api';
 export default class App extends React.Component {
   constructor(props) {
@@ -30,7 +34,16 @@ export default class App extends React.Component {
 
   // render创建之前
   componentWillMount() {
-    // 验证/读取 登陆状态
+    let isInphoneX =  Platform.OS === 'ios' &&
+    ((height === X_HEIGHT && width === X_WIDTH) ||
+        (height === X_WIDTH && width === X_HEIGHT));
+        if (isInphoneX) {
+          style='iphoneX'
+      } else if (Platform.OS === 'ios') {
+          style='iphone'
+      } else {
+         style='android'
+      }
     this._checkLoginState();
     BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
   }
@@ -128,7 +141,7 @@ export default class App extends React.Component {
           <ImageBackground
             style={styles.ImageBackground }
             source={require('../../images/usr_info.jpg')}>
-            <View style={{flexDirection:'row',padding:10,marginTop:25}}>
+            <View style={{flexDirection:'row',padding:10,marginTop:style ==='iphoneX' ? 35 : 5,marginRight:10}}>
               <Text style={{
                 marginLeft: '75%',
                 color:'white',
@@ -312,7 +325,6 @@ const styles = StyleSheet.create({
     alignItems:'center',
     textAlign: 'center',
     borderRadius: 10,
-    width: 50,
     fontSize: 10,
     height:20,
   },

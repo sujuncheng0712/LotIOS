@@ -1,10 +1,14 @@
 import React from 'react';
-import {ScrollView,View, Text, StyleSheet, AsyncStorage,Image,TouchableOpacity,Dimensions} from 'react-native';
+import {ScrollView,View, Text, StyleSheet, AsyncStorage,Image,TouchableOpacity,Dimensions,Platform} from 'react-native';
 import {Echarts, echarts} from 'react-native-secharts';
 import _updateConfig from '../../../update.json'
 const {appKey} = _updateConfig[Platform.OS];
 const url = 'https://iot2.dochen.cn/api';
 const {height,width} =  Dimensions.get('window');
+// iPhoneX
+const X_WIDTH = 414;
+const X_HEIGHT =896;
+let style='android'
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -97,8 +101,16 @@ export default class App extends React.Component {
   };
 
   componentDidMount() {
-    //wechat.registerApp('wxed79edc328ec284a');
-  
+      let isInphoneX =  Platform.OS === 'ios' &&
+      ((height === X_HEIGHT && width === X_WIDTH) ||
+          (height === X_WIDTH && width === X_HEIGHT));
+          if (isInphoneX) {
+            style='iphoneX'
+        } else if (Platform.OS === 'ios') {
+            style='iphone'
+        } else {
+           style='android'
+        }
       this._checkLoginState();
       this.getVersion();
     
@@ -157,7 +169,7 @@ export default class App extends React.Component {
     };
     return (
       <ScrollView style={{flex: 1,  backgroundColor:'#F0EEEF',}}>
-        <View style={styles.top}>
+        <View style={{...styles.top,marginTop:style ==='iphoneX' ? 25 : 0,}}>
           <Text style={styles.topFont}>近7天激活概览</Text>
           <Echarts option={option} height={350} />
         </View>
@@ -252,6 +264,7 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   top:{
     backgroundColor:'#F0EEEF',
+    
   },
   topFont:{
     fontWeight:'bold',
