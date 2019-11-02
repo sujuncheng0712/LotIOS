@@ -1075,9 +1075,9 @@
     "@types/node" "*"
 
 "@types/node@*":
-  version "12.12.3"
-  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.12.3.tgz#ebfe83507ac506bc3486314a8aa395be66af8d23"
-  integrity sha1-6/6DUHrFBrw0hjFKiqOVvmavjSM=
+  version "12.12.5"
+  resolved "https://registry.npm.taobao.org/@types/node/download/@types/node-12.12.5.tgz?cache=0&sync_timestamp=1572630736151&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-12.12.5.tgz#66103d2eddc543d44a04394abb7be52506d7f290"
+  integrity sha1-ZhA9Lt3FQ9RKBDlKu3vlJQbX8pA=
 
 "@types/prop-types@^15.5.5":
   version "15.7.3"
@@ -1890,12 +1890,12 @@ command-exists@^1.2.8:
 
 commander@^2.19.0, commander@~2.20.3:
   version "2.20.3"
-  resolved "https://registry.npm.taobao.org/commander/download/commander-2.20.3.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcommander%2Fdownload%2Fcommander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
+  resolved "https://registry.npm.taobao.org/commander/download/commander-2.20.3.tgz?cache=0&sync_timestamp=1572603184853&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcommander%2Fdownload%2Fcommander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
   integrity sha1-/UhehMA+tIgcIHIrpIA16FMa6zM=
 
 commander@~2.13.0:
   version "2.13.0"
-  resolved "https://registry.npm.taobao.org/commander/download/commander-2.13.0.tgz?cache=0&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcommander%2Fdownload%2Fcommander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
+  resolved "https://registry.npm.taobao.org/commander/download/commander-2.13.0.tgz?cache=0&sync_timestamp=1572603184853&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcommander%2Fdownload%2Fcommander-2.13.0.tgz#6964bca67685df7c1f1430c584f07d7597885b9c"
   integrity sha1-aWS8pnaF33wfFDDFhPB9dZeIW5w=
 
 commondir@^1.0.1:
@@ -4629,6 +4629,11 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
+moment@^2.22.0:
+  version "2.24.0"
+  resolved "https://registry.npm.taobao.org/moment/download/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+  integrity sha1-DQVdU/UFKqZTyfbraLtdEr9cK1s=
+
 morgan@^1.9.0:
   version "1.9.1"
   resolved "https://registry.npm.taobao.org/morgan/download/morgan-1.9.1.tgz#0a8d16734a1d9afbc824b99df87e738e58e2da59"
@@ -5422,6 +5427,13 @@ react-native-collapsible@^1.4.0:
   integrity sha1-2ik3tQmSGyi/Gw+euOUK1hw/+10=
   dependencies:
     prop-types "^15.6.2"
+
+react-native-datepicker@^1.7.2:
+  version "1.7.2"
+  resolved "https://registry.npm.taobao.org/react-native-datepicker/download/react-native-datepicker-1.7.2.tgz#58d0822591a0ac9b32aba082650222a0ee29669d"
+  integrity sha1-WNCCJZGgrJsyq6CCZQIioO4pZp0=
+  dependencies:
+    moment "^2.22.0"
 
 react-native-gesture-handler@^1.5.0:
   version "1.5.0"
@@ -6635,9 +6647,9 @@ uglify-es@^3.1.9:
     source-map "~0.6.1"
 
 uglify-js@^3.1.4:
-  version "3.6.5"
-  resolved "https://registry.npm.taobao.org/uglify-js/download/uglify-js-3.6.5.tgz?cache=0&sync_timestamp=1572335986209&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fuglify-js%2Fdownload%2Fuglify-js-3.6.5.tgz#b0ee796d2ae7e25672e04f65629b997cd4b30bd6"
-  integrity sha1-sO55bSrn4lZy4E9lYpuZfNSzC9Y=
+  version "3.6.6"
+  resolved "https://registry.npm.taobao.org/uglify-js/download/uglify-js-3.6.6.tgz?cache=0&sync_timestamp=1572608365270&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fuglify-js%2Fdownload%2Fuglify-js-3.6.6.tgz#7ec28c92c7131c6a096b69cd48722600cc534207"
+  integrity sha1-fsKMkscTHGoJa2nNSHImAMxTQgc=
   dependencies:
     commander "~2.20.3"
     source-map "~0.6.1"

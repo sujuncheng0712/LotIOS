@@ -2,6 +2,7 @@ import { createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 
 import White from './src/pages/White';
+import GroupHome from './src/pages/GroupHome';
 import Home from './src/pages/Home';
 import Home33 from './src/pages/Home33';
 import Settlement from './src/pages/Settlement';
@@ -31,6 +32,24 @@ import Order from './src/pages/order/Order';
 import Orders from './src/pages/order/Orders';
 import MiandanRule from './src/pages/miandan/MiandanRule';
 import RecommendRecord from './src/pages/miandan/RecommendRecord';
+import HomePage from './src/pages/group/HomePage';
+import Earnring from './src/pages/group/Earnring';
+import ActivataDevice from './src/pages/group/ActivataDevice';
+import SetDetail from './src/pages/group/SetDetail';
+import Balance from './src/pages/group/Balance';
+import GroupCash from './src/pages/group/GroupCash';
+import WriteCard from './src/pages/group/WriteCard';
+import CashPassword from './src/pages/group/CashPassword';
+import GroupCashRecord from './src/pages/group/GroupCashRecord';
+import Mall from './src/pages/group/Mall';
+import Codes from './src/pages/group/Codes';
+import UserQuery from './src/pages/group/UserQuery';
+import Addmerchant from './src/pages/group/Addmerchant';
+import MerchantList from './src/pages/group/MerchantList';
+import Pick from './src/pages/group/Pick';
+import Statement from './src/pages/group/Statement';
+import PhoneGuide from './src/pages/group/PhoneGuide';
+import PCGuide from './src/pages/group/PCGuide';
 console.disableYellowBox = true;
 console.warn('YellowBox is disabled.');
 
@@ -66,6 +85,25 @@ const AppStack = createStackNavigator(
     Activation:Activation,
     MiandanRule:MiandanRule,
     RecommendRecord:RecommendRecord,
+    HomePage:HomePage,
+    GroupHome:GroupHome,
+    Earnring:Earnring,
+    ActivataDevice:ActivataDevice,
+    SetDetail:SetDetail,
+    Balance:Balance,
+    GroupCash:GroupCash,
+    WriteCard:WriteCard,
+    CashPassword:CashPassword,
+    GroupCashRecord:GroupCashRecord,
+    Mall:Mall,
+    Codes:Codes,
+    UserQuery:UserQuery,
+    Addmerchant:Addmerchant,
+    MerchantList:MerchantList,
+    Pick:Pick,
+    Statement:Statement,
+    PhoneGuide:PhoneGuide,
+    PCGuide:PCGuide,
   },
   // {
   //   initialRouteName: 'Home',
