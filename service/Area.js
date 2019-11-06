@@ -1,12 +1,5 @@
 const area = [
-  {
-    "code": '',
-    "sheng": "",
-    "di": "",
-    "xian": "",
-    "name": "",
-    "level": 1,
-  },
+
   {
     "code": "110000",
     "sheng": "11",

@@ -1,18 +1,14 @@
 import React from 'react';
-import {View, Text, AsyncStorage, ScrollView, StyleSheet,Picker,TextInput,TouchableOpacity,ToastAndroid} from 'react-native';
+import {View, Text, AsyncStorage, ScrollView, StyleSheet,Picker,TextInput,TouchableOpacity} from 'react-native';
 import Area from '../../../service/Area';
+import Toast from 'react-native-root-toast';
+import ModalDropdown from 'react-native-modal-dropdown';
 const url = 'https://iot2.dochen.cn/api';
+let levelArr = [];
 let pArr = [];
 let cArr=[];
 let tArr=[];
-//省
-const provinceArr = Area.map((val,i)=>{
 
-  pArr.push(val.value);
-  return (
-    <Picker.Item key={i} label={val.value} value={`${val.code}` }/>
-  );
-});
 let that = '';
 export default class App extends React.Component {
   constructor(props) {
@@ -63,6 +59,10 @@ export default class App extends React.Component {
 
   componentDidMount() {
     //wechat.registerApp('wxed79edc328ec284a');
+    //省
+     Area.map((val,i)=>{
+       pArr.push(val.value);
+    });
   }
 
   // 验证本地存储的资料是否有效
@@ -128,16 +128,11 @@ export default class App extends React.Component {
 
    //获得对应code下的市数组
    getCityArr(code){
+    cArr = [];
     Area.forEach(item=>{
       if(item.code === code){
         let cityArr = item.children.map((val,i)=>{
           cArr.push(val.value);
-          if(i===0){
-            this.setState({cityValue:tArr[0],cityCode:`${val.code}` })
-          }
-          return (
-            <Picker.Item key={i} label={val.value} value={`${val.code}` }/>
-          )
         });
         this.setState({cityArr});
       }
@@ -147,18 +142,14 @@ export default class App extends React.Component {
    //获得对应code下的县数组
    getCountyArr(cityCode){
     const { provinceCode } = this.state;
+    tArr = [];
     Area.forEach(item=>{
       if(item.code === provinceCode){
         item.children.forEach(value=>{
           if(value.code === cityCode){
             let countyArr = value.children.map((val,i)=>{
               tArr.push(val.value);
-              if(i===0){
-                this.setState({countyCode:`${val.code}`,county:val.value});
-              }
-              return (
-                <Picker.Item key={i} label={val.value} value={`${val.code}` }/>
-              )
+          
             });
             if(countyArr.length>0){
               this.setState({countyArr});
@@ -203,13 +194,24 @@ export default class App extends React.Component {
     let a = true;
     data.forEach(item => {
       if (!(item.allowance > 0 && item.commission > 0)) {
-        message.error('补贴和返点必须大于0');
+        Toast.show('补贴和返点必须大于0');
         a = false;
         return false;
       }
     });
     if (a === false) {
       return false;
+    }
+    //商家等级
+    let level = '';
+    if(type2 ==='品牌商'){
+      level = 1
+    }else if(type2==='运营商'){
+      level = 2
+    }else if(type2==='代理商'){
+      level = 3
+    }else if(type2==='经销商'){
+      level = 4
     }
 
     let postMerchants = `${url}/merchants`;
@@ -235,15 +237,15 @@ export default class App extends React.Component {
         res.json().then(info => {
           console.log(info);
           if (info.status) {
-            ToastAndroid.show('提交成功', ToastAndroid.SHORT);
+            Toast.show('提交成功');
             this.props.navigation.goBack(); 
           } else {
             if (info.code === 9005) {
-              ToastAndroid.show('返点或补贴错误，请在个人中心检查确认', ToastAndroid.SHORT);
+              Toast.show('返点或补贴错误，请在个人中心检查确认');
             } else if (info.code === 10006) {
-              ToastAndroid.show('请输入完整，正确的参数', ToastAndroid.SHORT);
+              Toast.show('请输入完整，正确的参数');
             }else if (info.code === 10004) {
-              ToastAndroid.show('该商家已存在', ToastAndroid.SHORT);
+              Toast.show('该商家已存在');
             }
           }
         });
@@ -262,35 +264,13 @@ export default class App extends React.Component {
       let showLevelList = <Picker.Item label={''} value={'-1'}/>;
       //客户类型处理
       if(isVendor){
-        const levelArr = [{value:'-1',label:''},{value:'1',label:'品牌商'},{value:'2',label:'运营商'},{value:'3',label:'代理商'},{value:'4',label:'经销商'}];
-        showLevelList = levelArr.map((item,key)=>{
-          return(
-            <Picker.Item key={key} label={item.label} value={item.value }/>
-          )
-        })
+        levelArr = ['品牌商','运营商','代理商','经销商'];
       }  else if(isMer01){
-        const levelArr2 = [{value:'-1',label:''},{value:'2',label:'运营商'},{value:'3',label:'代理商',key:2},{value:'4',label:'经销商'}];
-        showLevelList = levelArr2.map((item,key)=>{
-            return(
-              <Picker.Item key={key} label={item.label} value={item.value }/>
-            )
-          
-        })
+        levelArr = ['运营商','代理商','经销商'];
       } else  if(isMer02){
-        const levelArr3 = [{value:'-1',label:''},{value:'3',label:'代理商',key:2},{value:'4',label:'经销商'}];
-        showLevelList = levelArr3.map((item,key)=>{
-            return(
-              <Picker.Item key={key} label={item.label} value={item.value }/>
-            )
-          
-        })
+        levelArr = ['代理商','经销商'];
       } else  if(isMer03){
-        const levelArr4 = [{value:'-1',label:''},{value:'4',label:'经销商'}];
-        showLevelList = levelArr4.map((item,key)=>{
-            return(
-              <Picker.Item key={key} label={'经销商'} value={'4' }/>
-            )
-        })
+        levelArr = ['经销商'];
       }
 
 
@@ -341,15 +321,14 @@ export default class App extends React.Component {
             </View>
           
              <View  style={styles.itemInput}>
-                <Picker
-                  mode={'dropdown'}
-                  style={styles.picker}
-                  selectedValue={that.state.type2}
-                  onValueChange={(value,key) => {
-                    that.setState({type2: value});}
-                  }>
-                    {showLevelList}
-                </Picker>
+              <ModalDropdown 
+                 style={styles.dropdown_1}
+                 ref="dropdown_2"
+                 defaultValue={'请选择'}
+                 options={levelArr}
+                 textStyle={styles.pickerFont}
+                 onSelect={(idx, value) =>{this.setState({type2:value})}}
+            />
             </View>
           </View>
           {/*单位名称*/}
@@ -372,16 +351,23 @@ export default class App extends React.Component {
             </View>
           
              <View  style={styles.itemInput}>
-             <Picker
-              mode={'dropdown'}
-              style={styles.picker}
-              selectedValue={this.state.provinceCode}
-              onValueChange={(value,key) => {
-                this.setState({provinceCode: value,provinceValue:pArr[key]});console.log(value);console.log(pArr[key]);this.forceUpdate; this.getCityArr(value);}
-  
-              }>
-              {provinceArr}
-            </Picker>
+             <ModalDropdown 
+                 style={styles.dropdown_1}
+                 defaultValue={'请选择省'}
+                 options={pArr}
+                 textStyle={styles.pickerFont}
+                 dropdownTextStyle={styles.pickerFont}
+                 onSelect={(idx, value) =>{
+                   let provinceCode = '';
+                   Area.forEach((item,i)=>{
+                     if(value === item.label){
+                      provinceCode = item.code;
+                     }
+                   })
+                   this.setState({provinceCode: provinceCode,provinceValue:value});
+                   this.getCityArr(provinceCode);
+                  }}
+            />
             </View>
           </View>
           {/*市*/}
@@ -389,18 +375,29 @@ export default class App extends React.Component {
             <View style={styles.itemTitle}>
              <Text style={{width:'100%',textAlign:'right'}}>市：</Text>
             </View>
-          
              <View  style={styles.itemInput}>
-               <Picker
-                mode={'dropdown'}
-                style={styles.picker}
-                selectedValue={this.state.cityCode}
-                onValueChange={(value,key) => {
-                  this.setState({cityCode: value,cityValue:cArr[key]});console.log(value);console.log(cArr[key]); this.getCountyArr(value);}
-    
-                }>
-                {cityArr}
-              </Picker>
+               <ModalDropdown 
+                 style={styles.dropdown_1}
+                 defaultValue={'请选择市'}
+                 options={cArr}
+                 dropdownTextStyle={styles.pickerFont}
+                 textStyle={styles.pickerFont}
+                 onSelect={(idx, value) =>{
+                   console.log(Area);
+                   let cityCode = '';
+                   Area.forEach((item,i)=>{
+                     if(this.state.provinceValue === item.label){
+                       item.children.forEach((val,key)=>{
+                        if(val.label === value){
+                          cityCode = val.code;
+                         }
+                       })
+                     }
+                   })
+                   this.setState({cityCode: cityCode,cityValue:value});
+                   this.getCountyArr(cityCode);
+                  }}
+            />
             </View>
           </View>
           {/*县/区*/}
@@ -410,16 +407,18 @@ export default class App extends React.Component {
             </View>
           
              <View  style={styles.itemInput}>
-               <Picker
-                mode={'dropdown'}
-                style={styles.picker}
-                selectedValue={this.state.countyCode}
-                onValueChange={(value,key) => {
-                  this.setState({countyCode:value,countyValue: tArr[key]});console.log(value);console.log(tArr[key]);}
-    
-                }>
-                {countyArr}
-              </Picker>
+               <ModalDropdown 
+                 style={styles.dropdown_1}
+                 dropdownTextStyle={styles.pickerFont}
+                 defaultValue={'请选择县/区'}
+                 options={tArr}
+                 textStyle={styles.pickerFont}
+                 onSelect={(idx, value) =>{
+                   let countyCode = '';
+                   this.setState({countyCode: countyCode,cityValue:value});
+                  }}
+            />
+
             </View>
           </View>
           {/*联系人*/}
@@ -546,7 +545,7 @@ const styles = StyleSheet.create({
     justifyContent:'center'
   },
   picker:{
-    
+    padding:5,
   },
   itemInput:{
     width:'70%',
@@ -554,6 +553,7 @@ const styles = StyleSheet.create({
     borderWidth:0.5,
     borderRadius: 5,
     marginRight: 30,
+    padding:5
   },
   button:{
     backgroundColor: '#FF7A01',
@@ -566,4 +566,8 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 20,
   },
+  pickerFont:{
+    fontSize:14,
+    color:'#666666',
+  }
 })

@@ -319,7 +319,9 @@ export default class App extends React.Component {
              <Text>推荐记录</Text>
            </TouchableOpacity>
          </View>
-      
+          <View>
+            <Text style={styles.buttomTitle}>广东顺德迪吉凯电子商务有限公司</Text>
+          </View>
 
         </View>
       </ScrollView>
@@ -408,5 +410,11 @@ const styles = StyleSheet.create({
   miandanImg:{
    width:width*0.4, 
    height:width*0.4/1.793,
+  },
+  buttomTitle:{
+    width:'100%',
+    textAlign:'center',
+    paddingTop:50,
+    color:'#666666',
   }
 })

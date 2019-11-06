@@ -303,7 +303,9 @@ export default class App extends React.Component {
           : null
       
        }
-       
+         <View>
+            <Text style={styles.buttomTitle}>广东顺德迪吉凯电子商务有限公司</Text>
+          </View>
       </View>
       </ScrollView>
     );
@@ -379,4 +381,10 @@ const styles = StyleSheet.create({
     width:70,
     height:70,
   },
+  buttomTitle:{
+    width:'100%',
+    textAlign:'center',
+    paddingTop:50,
+    color:'#666666',
+  }
 })

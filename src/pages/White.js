@@ -51,7 +51,6 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <Text>加载中...</Text>
       </View>
     );
   }

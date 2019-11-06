@@ -422,6 +422,9 @@ export default class App extends React.Component {
               </View>
           </View>
         </View>
+        <View>
+            <Text style={styles.buttomTitle}>广东顺德迪吉凯电子商务有限公司</Text>
+          </View>
       </ScrollView>
     );
   }
@@ -523,5 +526,11 @@ const styles = StyleSheet.create({
   mainTitle:{
     paddingLeft:20,
     marginTop:15
+  },
+  buttomTitle:{
+    width:'100%',
+    textAlign:'center',
+    paddingTop:50,
+    color:'#666666',
   }
 })

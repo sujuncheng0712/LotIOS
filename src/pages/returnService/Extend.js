@@ -6,27 +6,21 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  ScrollView,
+  ScrollView,Picker,
   TextInput
   ,Dimensions
 } from 'react-native';
 import Toast from 'react-native-root-toast';
-import { Provider,Picker } from '@ant-design/react-native';
+import { Provider } from '@ant-design/react-native';
 import { WebView } from 'react-native-webview';
 import Area from '../../../service/Area';
 import address1 from '../../../service/address';
+import ModalDropdown from 'react-native-modal-dropdown';
 const url = 'https://iot2.dochen.cn/api';
 let pArr = [];
 let cArr=[];
 let tArr=[];
-//省
-// const provinceArr = Area.map((val,i)=>{
 
-//   pArr.push(val.value);
-//   return (
-//     <PickerIOS.Item key={i} label={val.value} value={`${val.code}` }/>
-//   );
-// });
 
 export default class App extends React.Component {
   constructor(props) {
@@ -90,6 +84,41 @@ export default class App extends React.Component {
     }
   };
 
+     //获得对应code下的市数组
+     getCityArr(code){
+      cArr = [];
+      Area.forEach(item=>{
+        if(item.code === code){
+          let cityArr = item.children.map((val,i)=>{
+            cArr.push(val.value);
+          });
+          this.setState({cityArr});
+        }
+      });
+    }
+  
+     //获得对应code下的县数组
+     getCountyArr(cityCode){
+      const { provinceCode } = this.state;
+      tArr = [];
+      Area.forEach(item=>{
+        if(item.code === provinceCode){
+          item.children.forEach(value=>{
+            if(value.code === cityCode){
+              let countyArr = value.children.map((val,i)=>{
+                tArr.push(val.value);
+            
+              });
+              if(countyArr.length>0){
+                this.setState({countyArr});
+              }
+            }
+          });
+  
+        }
+      });
+    }
+
   submit(){
     console.log(111);
     let {  username, phone, address, remark,number,LoginInfo,type, provinceValue,
@@ -142,6 +171,10 @@ export default class App extends React.Component {
 
   componentDidMount() {
     //wechat.registerApp('wxed79edc328ec284a');
+     //省
+     Area.map((val,i)=>{
+      pArr.push(val.value);
+   });
     const {navigation} = this.props;
     const state = navigation.getParam('state','');
     const type = navigation.getParam('type','');
@@ -253,18 +286,72 @@ export default class App extends React.Component {
                     onChangeText={(e)=>{this.setState({phone:e})}}
                   />
                 </View>
+               
                 <View style={styles.item}>
-            <Text style={styles.title}>地区：</Text>
-            <View style={styles.itemInput}  onPress={this.onPress}>
-                <Picker
-                  data={address1}
-                  cols={3}
-                  value={this.state.area}
-                  onChange={this.onChange}>
-                    <Text style={{...styles.itemInput,width:'100%',paddingTop:10}}>{area}</Text>
-                </Picker>
-            </View>
-          </View>
+                  <Text style={styles.title}>*省 : </Text>
+                  <View  style={styles.itemInput}>
+                  <ModalDropdown 
+                    defaultValue={'请选择省'}
+                    options={pArr}
+                    textStyle={styles.pickerFont}
+                    dropdownTextStyle={styles.pickerFont}
+                    onSelect={(idx, value) =>{
+                      let provinceCode = '';
+                      Area.forEach((item,i)=>{
+                        if(value === item.label){
+                          provinceCode = item.code;
+                        }
+                      })
+                      this.setState({provinceCode: provinceCode,provinceValue:value});
+                      this.getCityArr(provinceCode);
+                      }}
+                   />
+                  </View>
+                </View> 
+
+                <View style={styles.item}>
+                  <Text style={styles.title}>*市 : </Text>
+                  <View  style={styles.itemInput}>
+                  <ModalDropdown 
+                    style={styles.dropdown_1}
+                    defaultValue={'请选择市'}
+                    options={cArr}
+                    textStyle={styles.pickerFont}
+                    dropdownTextStyle={styles.pickerFont}
+                    onSelect={(idx, value) =>{
+                      let cityCode = '';
+                      Area.forEach((item,i)=>{
+                        if(this.state.provinceValue === item.label){
+                          item.children.forEach((val,key)=>{
+                            if(val.label === value){
+                              cityCode = val.code;
+                            }
+                          })
+                        }
+                      })
+                      this.setState({cityCode: cityCode,cityValue:value});
+                      this.getCountyArr(cityCode);
+                      }}
+                   />
+                  </View>
+                </View> 
+
+                <View style={styles.item}>
+                  <Text style={styles.title}>县/区 : </Text>
+                  <View  style={styles.itemInput}>
+                  <ModalDropdown 
+                    style={styles.dropdown_1}
+                    defaultValue={'请选择县/区'}
+                    options={tArr}
+                    dropdownTextStyle={styles.pickerFont}
+                    textStyle={styles.pickerFont}
+                    onSelect={(idx, value) =>{
+                      let countyCode = '';
+                      this.setState({countyCode: countyCode,cityValue:value});
+                    }}
+                  />
+                  </View>
+                </View> 
 
                 <View style={styles.item}>
                   <Text style={styles.title}>*详细地址：</Text>
@@ -402,8 +489,9 @@ const styles = StyleSheet.create({
     borderColor:'#bbb',
     borderWidth:0.5,
     borderRadius: 5,
-    height:40,
+    padding:5,
     marginRight: 30,
+    justifyContent:'center',
   },
   button:{
     backgroundColor: '#FF7A01',
@@ -457,5 +545,10 @@ const styles = StyleSheet.create({
   video:{
     width:'100%',
     height:250,
-  }
+  },
+  pickerFont:{
+    fontSize:14,
+    color:'#666666',
+  },
+
 })
