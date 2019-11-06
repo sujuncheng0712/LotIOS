@@ -315,9 +315,7 @@ export default class App extends React.Component {
   }
 }
 const styles = StyleSheet.create({
-  wrapper: {
-    height: 20,
-  },
+  wrapper: {},
   slide: {
     flex: 1,
     justifyContent: 'center',
