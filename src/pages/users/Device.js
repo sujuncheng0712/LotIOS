@@ -7,14 +7,14 @@ import {
   Dimensions,
   Image,
   TouchableOpacity,
-  ScrollView, BackHandler,Platform,Linking
+  ScrollView, BackHandler, Platform, Linking
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import _updateConfig from '../../../update.json'
-const {appKey} = _updateConfig[Platform.OS];
+const { appKey } = _updateConfig[Platform.OS];
 import Swiper from 'react-native-swiper';
 const url = 'https://iot2.dochen.cn/api';
-const {height,width} =  Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 export default class App extends React.Component {
   constructor(props) {
     super(props);
@@ -29,12 +29,12 @@ export default class App extends React.Component {
       msg: '',
       checkUid: '',
       LoginInfo: {},
-      version:'',
-      oldVersion:'1.0',
-      visable:'false',
+      version: '',
+      oldVersion: '1.0',
+      visable: 'false',
     };
   }
-  static navigationOptions = ({navigation}) => {
+  static navigationOptions = ({ navigation }) => {
     return {
       header: null,
     };
@@ -47,14 +47,14 @@ export default class App extends React.Component {
     console.log(LoginInfo);
     // eslint-disable-next-line no-eval
     if (LoginInfo !== null) {
-      if(LoginInfo.type !==null){
-       // this.props.navigation.push('GroupHome', {_isLogin: true});
+      if (LoginInfo.type !== null) {
+        // this.props.navigation.push('GroupHome', {_isLogin: true});
       }
-    
-      this.setState({LoginInfo});
+
+      this.setState({ LoginInfo });
       let urlInfo = `${url}/equipments?uid=${LoginInfo.uid}&sale_type=${
         LoginInfo.sale_type
-      }`;
+        }`;
       fetch(urlInfo).then(res => {
         res.json().then(info => {
           console.log(info);
@@ -84,15 +84,15 @@ export default class App extends React.Component {
   };
 
   //获取版本号
-  getVersion(){
-    const {oldVersion} = this.state;
+  getVersion() {
+    const { oldVersion } = this.state;
     let urlInfo = `${url}/auth`;
-    fetch(urlInfo).then(res=>{
-      res.json().then(info=>{
+    fetch(urlInfo).then(res => {
+      res.json().then(info => {
         console.log(info)
-        if(info.status){
-          if(info.version !== oldVersion){
-            this.setState({version:info.version,visable:true})
+        if (info.status) {
+          if (info.version !== oldVersion) {
+            this.setState({ version: info.version, visable: true })
           }
         }
       })
@@ -130,7 +130,7 @@ export default class App extends React.Component {
   ReloadEquipments(LoginInfo) {
     let urlInfo = `${url}/equipments?uid=${LoginInfo.uid}&sale_type=${
       LoginInfo.sale_type
-    }`;
+      }`;
     //获取设备
     fetch(urlInfo).then(res => {
       res.json().then(info => {
@@ -145,7 +145,7 @@ export default class App extends React.Component {
           let p = info.data[0].new_feCdkeyData.DCL01.length;
           let c = info.data[0].new_feCdkeyData.DCL02.length;
           let r = info.data[0].new_feCdkeyData.DCL09.length;
-          this.setState({p: p, c: c, r: r});
+          this.setState({ p: p, c: c, r: r });
           info.data.forEach((val, i) => {
             console.log('000');
             if (val.fe_isUse === 0) {
@@ -170,8 +170,8 @@ export default class App extends React.Component {
           } else if (!(info.data.online_at && !info.data.offline_at)) {
             msg = '新滤芯已购买，请联网恢复状态';
           }
-          this.setState({msg: msg});
-          this.setState({lists});
+          this.setState({ msg: msg });
+          this.setState({ lists });
         }
       });
     });
@@ -182,7 +182,7 @@ export default class App extends React.Component {
     const filterKey = [];
     let urlInfo = `/orders?uid=${LoginInfo.uid}&sale_type=${
       LoginInfo.sale_type
-    }`;
+      }`;
     console.log(111);
     fetch(urlInfo).then(res => {
       res.json().then(info => {
@@ -193,7 +193,7 @@ export default class App extends React.Component {
               //获取滤芯激活码
               let urlInfo2 = `${url}/filter_cdkey?uid=${
                 LoginInfo.uid
-              }&sale_type=${LoginInfo.sale_type}`;
+                }&sale_type=${LoginInfo.sale_type}`;
               fetch(urlInfo2).then(res => {
                 res.json().then(info => {
                   if (info.status) {
@@ -239,7 +239,7 @@ export default class App extends React.Component {
         //滤芯激活
         let urlInfo = `${url}/filter_element/${eid}/activation?uid=${
           LoginInfo.uid
-        }&sale_type=${LoginInfo.sale_type}`;
+          }&sale_type=${LoginInfo.sale_type}`;
         fetch(urlInfo, {
           method: 'POST',
           body: JSON.stringify({
@@ -252,7 +252,7 @@ export default class App extends React.Component {
             console.log(info);
             if (info.status) {
               Toast.show('滤芯激活成功');
-              this.setState({filterStatus: 0});
+              this.setState({ filterStatus: 0 });
             }
           });
         });
@@ -286,7 +286,7 @@ export default class App extends React.Component {
 
   // 判断滤芯是否过期
   isExpiredOfFilters() {
-    const {filterElement} = this.state;
+    const { filterElement } = this.state;
     // 过期滤芯数组
     const expiredFilter = [];
     // 过期滤芯id数组
@@ -319,26 +319,26 @@ export default class App extends React.Component {
   }
 
   //下载更新
-  downLoad= async () =>{
-    this.setState({visable:false})
-     let info;
+  downLoad = async () => {
+    this.setState({ visable: false })
+    let info;
     try {
       //info = await checkUpdate(appKey);
     } catch (err) {
       console.warn(err);
       return;
     }
-   Linking.openURL('http://iot.dochen.cn/app-release.apk')
+    Linking.openURL('http://iot.dochen.cn/app-release.apk')
   }
-            
+
   render() {
-    const {lists,visable} = this.state;
+    const { lists, visable } = this.state;
     return (
-      <View style={{flex:1}}>               
-        <View style={{height:width/1.7}}>
+      <View style={{ flex: 1 }}>
+        <View style={{ height: width / 1.7 }}>
           <Swiper
             style={styles.wrapper}
-            height={width/1.7}
+            height={width / 1.7}
             horizontal={true}
             autoplay={false}
             autoplayTimeout={5}
@@ -388,24 +388,24 @@ export default class App extends React.Component {
             </Text>
           </TouchableOpacity>
         </View>
-        
+
         <View>
-          <Text style={{padding: 10}}>
+          <Text style={{ padding: 10 }}>
             你的新滤芯。PPF：{this.state.p}个，CPP：{this.state.c}个，RO：
             {this.state.r}个
           </Text>
           <Text>{this.state.checkUid}</Text>
         </View>
-       
+
         <View>
           <ScrollView>
             {lists.map((item, key) => (
-              <TouchableOpacity 
-              key={key}
-               style={styles.item}
-               onPress={() => {
-                this.props.navigation.navigate('DeviceIndex',{eid:item.uuid,model:item.model});
-              }}
+              <TouchableOpacity
+                key={key}
+                style={styles.item}
+                onPress={() => {
+                  this.props.navigation.navigate('DeviceIndex', { eid: item.uuid, model: item.model });
+                }}
               >
                 {item.model === 'DCA16-A' ? (
                   <View>
@@ -424,16 +424,16 @@ export default class App extends React.Component {
                     />
                   </View>
                 ) : (
-                  <View>
-                    <Image
-                      resizeMode="stretch"
-                      style={styles.deviceImg}
-                      source={require('../../images/icon_DCA20-B.jpg')}
-                    />
-                  </View>
-                )}
+                      <View>
+                        <Image
+                          resizeMode="stretch"
+                          style={styles.deviceImg}
+                          source={require('../../images/icon_DCA20-B.jpg')}
+                        />
+                      </View>
+                    )}
 
-                <View style={{flex: 1}}>
+                <View style={{ flex: 1 }}>
                   <View style={styles.deviceInfo}>
                     {item.online_at && !item.offline_at ? (
                       <Image
@@ -442,12 +442,12 @@ export default class App extends React.Component {
                         source={require('../../images/GPRS1.png')}
                       />
                     ) : (
-                      <Image
-                        resizeMode="stretch"
-                        style={styles.gprsImg}
-                        source={require('../../images/GPRS.png')}
-                      />
-                    )}
+                        <Image
+                          resizeMode="stretch"
+                          style={styles.gprsImg}
+                          source={require('../../images/GPRS.png')}
+                        />
+                      )}
                     <Text
                       style={{
                         color:
@@ -471,35 +471,35 @@ export default class App extends React.Component {
               </TouchableOpacity>
             ))}
           </ScrollView>
-          
+
         </View>
         {visable === true ?
           <View style={styles.scan}>
             <View style={styles.model}>
-                <Text style={styles.modelTitle}>物联汇新版震撼发布</Text>
-               <View  style={{padding:10}}>
-                   <Text>新版特性：</Text>
-                  <Text>1.别按下载</Text>
-                </View>
+              <Text style={styles.modelTitle}>物联汇新版震撼发布</Text>
+              <View style={{ padding: 10 }}>
+                <Text>新版特性：</Text>
+                <Text>1.别按下载</Text>
+              </View>
               <View style={styles.modelButton}>
                 <TouchableOpacity
                   style={styles.downLoadButton}
-                  onPress={()=>{this.downLoad()}}
+                  onPress={() => { this.downLoad() }}
                 >
-                  <Text style={{color:'white'}}>下 载</Text>
+                  <Text style={{ color: 'white' }}>下 载</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.downLoadButton}
-                  onPress={()=>{this.setState({visable:false})}}
+                  onPress={() => { this.setState({ visable: false }) }}
                 >
-                  <Text style={{color:'white'}}>取 消</Text>
+                  <Text style={{ color: 'white' }}>取 消</Text>
                 </TouchableOpacity>
               </View>
             </View>
-            
-         </View>  :<Text></Text>
+
+          </View> : <Text></Text>
         }
-       
+
       </View>
     );
   }
@@ -513,7 +513,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: width,
-    height:width/1.7
+    height: width / 1.7
   },
   deviceImg: {
     width: 50,
@@ -547,44 +547,44 @@ const styles = StyleSheet.create({
     fontSize: 10,
     padding: 5,
   },
-   scan:{
-    width:width,
-    height:height,
-    borderColor:'red',
-    borderWidth:1,
-    position:'absolute',
-    top:0,
-    left:0,
-    justifyContent:'center',
-    alignItems:'center',
+  scan: {
+    width: width,
+    height: height,
+    borderColor: 'red',
+    borderWidth: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  modelButton:{
-    flexDirection:'row',
-    padding:10,
-    justifyContent:'space-between',
+  modelButton: {
+    flexDirection: 'row',
+    padding: 10,
+    justifyContent: 'space-between',
   },
-  downLoadButton:{
-    width:'40%',
-    padding:5,
-    backgroundColor:'#FF7701',
-    borderColor:'#FF7701',
-    alignItems:'center',
-    justifyContent:'center',
-    borderRadius:5,
+  downLoadButton: {
+    width: '40%',
+    padding: 5,
+    backgroundColor: '#FF7701',
+    borderColor: '#FF7701',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 5,
   },
-  model:{
-  
-    width:width*8/10,
-    borderColor:'#FF7701',
-    borderWidth:1,
-    backgroundColor:'white',
-    borderRadius:5,
+  model: {
+
+    width: width * 8 / 10,
+    borderColor: '#FF7701',
+    borderWidth: 1,
+    backgroundColor: 'white',
+    borderRadius: 5,
   },
-  modelTitle:{
-    width:'100%',
-    backgroundColor:'#FF7701',
-    padding:10,
-    color:'white',
-    fontSize:20
+  modelTitle: {
+    width: '100%',
+    backgroundColor: '#FF7701',
+    padding: 10,
+    color: 'white',
+    fontSize: 20
   }
 });

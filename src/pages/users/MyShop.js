@@ -2,19 +2,18 @@ import React from 'react';
 import {
   View,
   Text,
-  Button,
   AsyncStorage,
   Image,
   StyleSheet,
   Dimensions,
   TouchableOpacity,
   ScrollView,
-  ToastAndroid,BackHandler,
+  BackHandler,
 } from 'react-native';
 import Toast from 'react-native-root-toast';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Swiper from 'react-native-swiper';
-const {height,width} =  Dimensions.get('window');
+const { height, width } = Dimensions.get('window');
 const url = 'https://iot2.dochen.cn/api';
 export default class App extends React.Component {
   constructor(props) {
@@ -25,7 +24,7 @@ export default class App extends React.Component {
       sale_type: 0,
     };
   }
-  static navigationOptions = ({navigation}) => {
+  static navigationOptions = ({ navigation }) => {
     return {
       headerTitle: '我的商城',
     };
@@ -66,10 +65,10 @@ export default class App extends React.Component {
     LoginInfo = eval('(' + LoginInfo + ')');
     if (LoginInfo !== null) {
       console.log(LoginInfo.name);
-      this.setState({sale_type: LoginInfo.sale_type});
+      this.setState({ sale_type: LoginInfo.sale_type });
       let urlInfo = `${url}/products?uid=${LoginInfo.uid}&sale_type=${
         LoginInfo.sale_type
-      }`;
+        }`;
       fetch(urlInfo).then(res => {
         res.json().then(info => {
           console.log(info);
@@ -93,7 +92,7 @@ export default class App extends React.Component {
               }
             });
             console.log(lists);
-            this.setState({lists});
+            this.setState({ lists });
           }
         });
       });
@@ -107,13 +106,13 @@ export default class App extends React.Component {
     const _lists = this.state.lists;
     if (key < 2) {
       _lists[0].check === false
-        ? Toast.show('目前只支持同时购买第一级和第二级滤芯！'): '';
+        ? Toast.show('目前只支持同时购买第一级和第二级滤芯！') : '';
       _lists[0].check = !this.state.lists[0].check;
       _lists[1].check = !this.state.lists[1].check;
     } else {
       _lists[key].check = !this.state.lists[key].check;
     }
-    this.setState({lists: _lists});
+    this.setState({ lists: _lists });
     this.countPrice();
   }
 
@@ -142,26 +141,26 @@ export default class App extends React.Component {
         }
       }
     }
-    this.setState({lists: _lists});
+    this.setState({ lists: _lists });
     this.countPrice();
   }
 
   // 统计所选择的商品价格
   countPrice() {
-    const {lists} = this.state;
+    const { lists } = this.state;
     let count = 0;
     lists.map(val => {
       if (val.check) {
         count = count + val.price * val.num;
       }
     });
-    this.setState({count});
+    this.setState({ count });
   }
 
   // 结算
   onClickClearing() {
-    const {lists, count} = this.state;
-    let products = {data: [], quantity: 0, total: count};
+    const { lists, count } = this.state;
+    let products = { data: [], quantity: 0, total: count };
     lists.map(val => {
       if (val.check) {
         products.data.push({
@@ -178,7 +177,7 @@ export default class App extends React.Component {
     if (products.data.length > 0) {
       this.props.navigation.navigate('Settlement', {
         products: products,
-        type:'products'
+        type: 'products'
       });
     } else {
       Toast.show('请选择商品！');
@@ -186,13 +185,13 @@ export default class App extends React.Component {
   }
 
   render() {
-    const {lists, count, sale_type} = this.state;
+    const { lists, count, sale_type } = this.state;
     return (
-      <ScrollView style={{flex:1}}>
-        <View style={{height:width/1.7}}>
+      <ScrollView style={{ flex: 1 }}>
+        <View style={{ height: width / 1.7 }}>
           <Swiper
             style={styles.wrapper}
-            height={width/1.7}
+            height={width / 1.7}
             horizontal={true}
             autoplay={false}
             autoplayTimeout={10}
@@ -234,64 +233,64 @@ export default class App extends React.Component {
           <ScrollView>
             {lists.map((item, key) =>
               item.type === 2 ||
-              item.type === 9 ||
-              (sale_type === 50 && item.type === 3) ? (
-                <View style={styles.item} key={key}>
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.selectProduct(key);
-                    }}>
-                    {item.check ? (
-                      <Image
-                        style={styles.iconfont}
-                        source={require('../../images/round.png')}
-                      />
-                    ) : (
-                      <Image
-                        style={styles.iconfont}
-                        source={require('../../images/round2.png')}
-                      />
-                    )}
-                  </TouchableOpacity>
-                  <Image
-                    style={styles.itemImg}
-                    source={{uri: `${item.prev_image}`}}
-                    cache={'force-cache'}
-                  />
-                  <View>
-                    <Text>{item.title}</Text>
-                    <Text style={{color: '#FF8702'}}>￥ {item.price}.00</Text>
-                  </View>
-                  <View style={styles.tools}>
+                item.type === 9 ||
+                (sale_type === 50 && item.type === 3) ? (
+                  <View style={styles.item} key={key}>
                     <TouchableOpacity
                       onPress={() => {
-                        this.numPlusMinus(key, 'plus');
+                        this.selectProduct(key);
                       }}>
-                      <Image
-                        style={styles.toolsImg}
-                        source={require('../../images/plus.png')}
-                      />
+                      {item.check ? (
+                        <Image
+                          style={styles.iconfont}
+                          source={require('../../images/round.png')}
+                        />
+                      ) : (
+                          <Image
+                            style={styles.iconfont}
+                            source={require('../../images/round2.png')}
+                          />
+                        )}
                     </TouchableOpacity>
-                    <Text style={styles.toolsNum}>{item.num}</Text>
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.numPlusMinus(key, 'minus');
-                      }}>
-                      <Image
-                        style={styles.toolsImg2}
-                        source={require('../../images/reduce.png')}
-                      />
-                    </TouchableOpacity>
+                    <Image
+                      style={styles.itemImg}
+                      source={{ uri: `${item.prev_image}` }}
+                      cache={'force-cache'}
+                    />
+                    <View>
+                      <Text>{item.title}</Text>
+                      <Text style={{ color: '#FF8702' }}>￥ {item.price}.00</Text>
+                    </View>
+                    <View style={styles.tools}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.numPlusMinus(key, 'plus');
+                        }}>
+                        <Image
+                          style={styles.toolsImg}
+                          source={require('../../images/plus.png')}
+                        />
+                      </TouchableOpacity>
+                      <Text style={styles.toolsNum}>{item.num}</Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.numPlusMinus(key, 'minus');
+                        }}>
+                        <Image
+                          style={styles.toolsImg2}
+                          source={require('../../images/reduce.png')}
+                        />
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                </View>
-              ) : null,
+                ) : null,
             )}
           </ScrollView>
         </View>
         <View style={styles.buy}>
           <View style={styles.buyLeft}>
             <Text>合计：</Text>
-            <Text style={{color: '#FF7A01'}}>{count}.00</Text>
+            <Text style={{ color: '#FF7A01' }}>{count}.00</Text>
             <Text>元</Text>
           </View>
           <View style={styles.buyRight}>
@@ -324,7 +323,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: width,
-    height: width/1.7,
+    height: width / 1.7,
   },
   iconfont: {
     marginTop: 12,
@@ -335,7 +334,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     marginLeft: 10,
-    marginRight:5,
+    marginRight: 5,
   },
   top: {
     textAlign: 'center',

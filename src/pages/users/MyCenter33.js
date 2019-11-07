@@ -8,21 +8,25 @@ import {
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
-  Image,ScrollView,Dimensions
+  Image, ScrollView, Dimensions
 } from 'react-native';
-const {width, height, scale} = Dimensions.get('window');
 import Icon from 'react-native-vector-icons/EvilIcons';
+const { width, height, scale } = Dimensions.get('window');
 const url = 'https://iot2.dochen.cn/api';
+// iPhoneX
+const X_WIDTH = 414;
+const X_HEIGHT = 896;
+let style = 'android'
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      order_data:[],
-      balance:0,
-      LoginInfo:'',
+      order_data: [],
+      balance: 0,
+      LoginInfo: '',
     };
   }
-  static navigationOptions = ({navigation}) => {
+  static navigationOptions = ({ navigation }) => {
     return {
       header: null,
     };
@@ -37,6 +41,16 @@ export default class App extends React.Component {
 
   componentDidMount() {
     //wechat.registerApp('wxed79edc328ec284a');
+    let isInphoneX = Platform.OS === 'ios' &&
+      ((height === X_HEIGHT && width === X_WIDTH) ||
+        (height === X_WIDTH && width === X_HEIGHT));
+    if (isInphoneX) {
+      style = 'iphoneX'
+    } else if (Platform.OS === 'ios') {
+      style = 'iphone'
+    } else {
+      style = 'android'
+    }
   }
 
   componentWillUnmount() {
@@ -61,26 +75,26 @@ export default class App extends React.Component {
     LoginInfo = eval('(' + LoginInfo + ')');
     console.log(LoginInfo)
     if (LoginInfo !== null) {
-      this.setState({LoginInfo});
+      this.setState({ LoginInfo });
       this.forceUpdate();
       //获取物流信息
       let urlInfo = `${url}/logisticsPage_create?uid=${LoginInfo.uid}&sale_type=${LoginInfo.sale_type}`;
-      fetch(urlInfo).then(res =>{
-        res.json().then(info =>{
+      fetch(urlInfo).then(res => {
+        res.json().then(info => {
           console.log(info);
-          if (info.status){
-            this.setState({order_data:info.order_data});
+          if (info.status) {
+            this.setState({ order_data: info.order_data });
           }
         })
       })
 
       //获取余额
       let urlInfo2 = `${url}/userWallet?uid=${LoginInfo.uid}&sale_type=${LoginInfo.sale_type}&type=now`;
-      fetch(urlInfo2).then(res =>{
-        res.json().then(info =>{
+      fetch(urlInfo2).then(res => {
+        res.json().then(info => {
           console.log(info)
-          if (info.status && info.uw_datas.length >0) {
-            this.setState({balance:info.uw_datas[0].balance});
+          if (info.status && info.uw_datas.length > 0) {
+            this.setState({ balance: info.uw_datas[0].balance });
           }
         })
       })
@@ -95,26 +109,26 @@ export default class App extends React.Component {
   };
 
   render() {
-    const {LoginInfo,order_data,balance} = this.state;
-    const showList = order_data.map((item,key)=>{
-      return(
+    const { LoginInfo, order_data, balance } = this.state;
+    const showList = order_data.map((item, key) => {
+      return (
         <View style={styles.logicItem} key={key}>
           <View>
-            <Text style={{color:'#666666',}}>最新物流</Text>
-            <Text style={{color:'#666666',}}>{item.follow_data.date}</Text>
+            <Text style={{ color: '#666666', }}>最新物流</Text>
+            <Text style={{ color: '#666666', }}>{item.follow_data.date}</Text>
           </View>
           <View>
             <Image
               style={styles.loginImg}
-              source={{uri: `${item.image}`}}
+              source={{ uri: `${item.image}` }}
               cache={'force-cache'}
             />
           </View>
           <View>
-            <Text style={{color:'#666666',}}> 
+            <Text style={{ color: '#666666', }}>
               {item.follow_data.date ? '已完成' : '运输中'}
             </Text>
-            <Text style={{color:'#666666',}}>
+            <Text style={{ color: '#666666', }}>
               {item.follow_data.message}
             </Text>
           </View>
@@ -123,202 +137,202 @@ export default class App extends React.Component {
     })
     return (
       <ScrollView>
-         <View style={{flex:1}}>
-            <View style={styles.top}>
-              <ImageBackground
-                style={styles.ImageBackground }
-                source={require('../../images/usr_info.jpg')}>
-                <View style={{flexDirection:'row',padding:10,justifyContent:'center',alignItems:'center'}}>
-                  <Text style={{
-                   
-                    color:'white',
-                  }}>{LoginInfo.name}</Text>
-               
-                </View>
-                <View style={styles.withdraw}>
+        <View style={{ flex: 1 }}>
+          <View style={styles.top}>
+            <ImageBackground
+              style={styles.ImageBackground}
+              source={require('../../images/usr_info.jpg')}>
+              <View style={{...styles.name,marginTop: style === 'iphoneX' ? 40 : 5}}>
+                <Text style={{
+                  color: 'white',
+                  fontSize:18,
+                }}>{LoginInfo.name}</Text>
+
+              </View>
+              <View style={{...styles.withdraw,marginTop: style === 'iphoneX' ? 40 : 5}}>
                 <TouchableOpacity
                   style={styles.button}
-                 onPress={()=>{this.props.navigation.push('ChangePassword',{state:'group'})}}>
-                 <Icon name="gear" size={25} color={'#fff'} />
-                 <Text style={{color:'white',fontSize:10}}>修改密码</Text>
-              </TouchableOpacity>
+                  onPress={() => { this.props.navigation.push('ChangePassword', { state: 'group' }) }}>
+                  {/* <Icon name="gear" size={25} color={'#fff'} /> */}
+                  <Text style={{ color: 'white',marginRight:5 }}>修改密码</Text>
+                </TouchableOpacity>
                 <TouchableOpacity
-                    style={styles.button}
-                    onPress={this.withdraw}>
-                      <Icon name="redo" size={25} color={'#fff'} />
-                    <Text style={{ textAlign:'center',color:'white',fontSize:10}}>注销</Text>
+                  style={styles.button}
+                  onPress={this.withdraw}>
+                  {/* <Icon name="redo" size={25} color={'#fff'} /> */}
+                  <Text style={{ textAlign: 'center', color: 'white',marginRight:5 }}>退出登陆</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{ width: '100%', justifyContent: 'center', alignItems: 'center',  }}>
+                <Text style={{ color: '#FF7701', backgroundColor: 'white', padding: 2, width: '12%', borderRadius: 5, textAlign: 'center', fontSize: 10 }}>会员</Text>
+              </View>
+
+              <View>
+                <View style={styles.topList}>
+                  <TouchableOpacity
+                    style={styles.topItem}
+                    onPress={() => this.props.navigation.navigate('CashRecord', { state: 'record' })}
+                  >
+                    <Image
+                      style={styles.topImg}
+                      source={require('../../images/group/shouzhiguanli01.png')}
+                    />
+                  </TouchableOpacity>
+
+                  <View style={styles.topItem}>
+                    <Text style={{ color: 'white', }}>￥{balance}</Text>
+                  </View>
+                  <TouchableOpacity
+                    style={styles.topItem}
+                    onPress={() => this.props.navigation.navigate('Cash')}
+                  >
+                    <Image
+                      style={styles.topImg}
+                      source={require('../../images/group/huafei2.png')}
+                    />
                   </TouchableOpacity>
                 </View>
-                <View style={{width:'100%',justifyContent:'center',alignItems:'center',marginTop:25}}>
-                  <Text style={{color:'#FF7701',backgroundColor:'white',padding:2,width:'12%',borderRadius:5,textAlign:'center',fontSize:10}}>会员</Text>
-                </View>
-            
-                  <View> 
-                    <View style={styles.topList}>
-                    <TouchableOpacity
-                      style={styles.topItem}
-                      onPress={()=> this.props.navigation.navigate('CashRecord',{state:'record'})}
-                    >
-                      <Image
-                        style={styles.topImg}
-                        source={require('../../images/group/shouzhiguanli01.png')}
-                      />
-                    </TouchableOpacity>
 
-                    <View style={styles.topItem}>
-                      <Text style={{color:'white',}}>￥{balance}</Text>
-                    </View>
-                    <TouchableOpacity
-                      style={styles.topItem}
-                      onPress={()=> this.props.navigation.navigate('Cash')}
-                    >
-                      <Image
-                        style={styles.topImg}
-                        source={require('../../images/group/huafei2.png')}
-                      />
-                    </TouchableOpacity>
+                <View style={styles.topList}>
+                  <View style={styles.topItem}>
+                    <Text style={{ color: '#fff', textAlign: 'center' }}>收支明细</Text>
                   </View>
 
-                  <View style={styles.topList}>
-                    <View style={styles.topItem}>
-                      <Text style={{color:'#fff',textAlign:'center'}}>收支明细</Text>
-                    </View>
+                  <View style={styles.topItem}>
+                    <Text style={{ color: '#fff', textAlign: 'center' }}>账号余额</Text>
+                  </View>
 
-                    <View style={styles.topItem}>
-                      <Text style={{color:'#fff',textAlign:'center'}}>账号余额</Text>
-                    </View>
-
-                    <View style={styles.topItem}>
-                      <Text style={{color:'#fff',textAlign:'center'}}>话费充值</Text>
-                    </View>
+                  <View style={styles.topItem}>
+                    <Text style={{ color: '#fff', textAlign: 'center' }}>话费充值</Text>
                   </View>
                 </View>
-              </ImageBackground>
-            </View>
-              
-            <View style={styles.content}>
-          <View style={{padding:10}}>
-            <Text>我的订单</Text>
+              </View>
+            </ImageBackground>
           </View>
-          <View style={styles.orderList}>
-            <TouchableOpacity
-              style={styles.orderItem}
-              onPress={()=> this.props.navigation.navigate('Orders',{title:'未付款'})}>
-                <View style={{padding:10,backgroundColor:'#FF7701',borderRadius:50}}>
+
+          <View style={styles.content}>
+            <View style={{ padding: 10 }}>
+              <Text>我的订单</Text>
+            </View>
+            <View style={styles.orderList}>
+              <TouchableOpacity
+                style={styles.orderItem}
+                onPress={() => this.props.navigation.navigate('Orders', { title: '未付款' })}>
+                <View style={{ padding: 10, backgroundColor: '#FF7701', borderRadius: 50 }}>
                   <Image
                     style={styles.orderImg}
                     source={require('../../images/user/yfk.png')}
                   />
                 </View>
-              
-              <Text>未付款</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.orderItem}
-              onPress={()=> this.props.navigation.navigate('Orders',{title:'待发货'})}>
-              <View style={{padding:10,backgroundColor:'#FF7701',borderRadius:50}}>
+
+                <Text>未付款</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.orderItem}
+                onPress={() => this.props.navigation.navigate('Orders', { title: '待发货' })}>
+                <View style={{ padding: 10, backgroundColor: '#FF7701', borderRadius: 50 }}>
                   <Image
                     style={styles.orderImg}
                     source={require('../../images/user/dfh.png')}
                   />
                 </View>
-              <Text>待发货</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.orderItem}
-              onPress={()=> this.props.navigation.navigate('Orders',{title:'待收货'})}>
-             <View style={{padding:10,backgroundColor:'#FF7701',borderRadius:50}}>
+                <Text>待发货</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.orderItem}
+                onPress={() => this.props.navigation.navigate('Orders', { title: '待收货' })}>
+                <View style={{ padding: 10, backgroundColor: '#FF7701', borderRadius: 50 }}>
                   <Image
                     style={styles.orderImg}
                     source={require('../../images/user/dsh.png')}
                   />
                 </View>
-              <Text>待收货</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.orderItem}
-              onPress={()=> this.props.navigation.navigate('Fix',{eid:''})}>
-             <View style={{padding:10,backgroundColor:'#FF7701',borderRadius:50}}>
+                <Text>待收货</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.orderItem}
+                onPress={() => this.props.navigation.navigate('Fix', { eid: '' })}>
+                <View style={{ padding: 10, backgroundColor: '#FF7701', borderRadius: 50 }}>
                   <Image
                     style={styles.orderImg}
                     source={require('../../images/user/wx.png')}
                   />
                 </View>
-              <Text>我要保修</Text>
+                <Text>我要保修</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={{ width: '100%', height: 5, backgroundColor: '#F0EEEF', }}></View>
+          <View>
+            {showList}
+          </View>
+          <View style={{ width: '100%', height: 5, backgroundColor: '#F0EEEF', }}></View>
+
+          <TouchableOpacity
+            style={{ flexDirection: 'row', padding: 10 }}
+            onPress={() => { this.props.navigation.push('MiandanRule') }} >
+            <View style={{ width: '60%', justifyContent: 'center' }}>
+              <Text style={{ fontWeight: 'bold' }}>免单活动进行中</Text>
+              <View style={{ flexDirection: 'row' }}>
+                <Text>推荐3人购买，送免单！</Text>
+                <Text style={{ backgroundColor: 'red', color: 'white', paddingRight: 5, paddingLeft: 5 }}>马上看></Text>
+              </View>
+            </View>
+            <View style={{ width: '40%' }}>
+              <Image
+                style={styles.miandanImg}
+                source={require('../../images/user/miandan.jpg')}
+              />
+            </View>
+          </TouchableOpacity>
+          <View style={{ width: '100%', height: 5, backgroundColor: '#F0EEEF', }}></View>
+
+          <View style={styles.orderList}>
+            <TouchableOpacity
+              style={styles.orderItem}
+              onPress={() => this.props.navigation.navigate('Code')}>
+              <View style={{ padding: 10, backgroundColor: '#FF7701', borderRadius: 50 }}>
+                <Image
+                  style={styles.orderImg}
+                  source={require('../../images/group/jihuoma1.png')}
+                />
+              </View>
+              <Text>激活码</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.orderItem}
+              onPress={() => this.props.navigation.navigate('Share')}>
+              <View style={{ padding: 10, backgroundColor: '#FF7701', borderRadius: 50 }}>
+                <Image
+                  style={styles.orderImg}
+                  source={require('../../images/group/daohang-tuiguanglianjie.png')}
+                />
+              </View>
+              <Text>我要推广</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.orderItem}
+              onPress={() => alert('完善中')}>
+              <View style={{ padding: 10, backgroundColor: '#FF7701', borderRadius: 50 }}>
+                <Image
+                  style={styles.orderImg}
+                  source={require('../../images/group/jilu.png')}
+                />
+              </View>
+              <Text>推广记录</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.orderItem}
+              onPress={() => this.props.navigation.navigate('RecommendRecord')}>
+              <View style={{ padding: 10, backgroundColor: '#FF7701', borderRadius: 50 }}>
+                <Image
+                  style={styles.orderImg}
+                  source={require('../../images/group/jilu.png')}
+                />
+              </View>
+              <Text>推荐记录</Text>
             </TouchableOpacity>
           </View>
-        </View>
-        <View style={{width:'100%',height:5, backgroundColor:'#F0EEEF',}}></View>
-        <View>
-          {showList}
-        </View>
-        <View style={{width:'100%',height:5, backgroundColor:'#F0EEEF',}}></View>
-
-        <TouchableOpacity 
-         style={{flexDirection:'row',padding:10}}
-         onPress={()=>{this.props.navigation.push('MiandanRule')}} >
-           <View style={{width:'60%',justifyContent:'center'}}>
-             <Text style={{fontWeight:'bold'}}>免单活动进行中</Text>
-             <View style={{flexDirection:'row'}}>
-               <Text>推荐3人购买，送免单！</Text>
-               <Text style={{backgroundColor:'red',color:'white',paddingRight:5,paddingLeft:5}}>马上看></Text>
-             </View>
-           </View>
-           <View style={{width:'40%'}}>
-             <Image
-              style={styles.miandanImg}
-              source={require('../../images/user/miandan.jpg')}
-            />
-          </View>
-        </TouchableOpacity>
-        <View style={{width:'100%',height:5, backgroundColor:'#F0EEEF',}}></View>
-
-        <View style={styles.orderList}>
-           <TouchableOpacity
-             style={styles.orderItem}
-             onPress={()=> this.props.navigation.navigate('Code')}>
-             <View style={{padding:10,backgroundColor:'#FF7701',borderRadius:50}}>
-                  <Image
-                    style={styles.orderImg}
-                    source={require('../../images/group/jihuoma1.png')}
-                  />
-                </View>
-             <Text>激活码</Text>
-           </TouchableOpacity>
-           <TouchableOpacity
-             style={styles.orderItem}
-             onPress={()=> this.props.navigation.navigate('Share')}>
-              <View style={{padding:10,backgroundColor:'#FF7701',borderRadius:50}}>
-                  <Image
-                    style={styles.orderImg}
-                    source={require('../../images/group/daohang-tuiguanglianjie.png')}
-                  />
-                </View>
-             <Text>我要推广</Text>
-           </TouchableOpacity>
-           <TouchableOpacity
-             style={styles.orderItem}
-             onPress={()=> alert('完善中')}>
-             <View style={{padding:10,backgroundColor:'#FF7701',borderRadius:50}}>
-                  <Image
-                    style={styles.orderImg}
-                    source={require('../../images/group/jilu.png')}
-                  />
-                </View>
-             <Text>推广记录</Text>
-           </TouchableOpacity>
-           <TouchableOpacity
-             style={styles.orderItem}
-             onPress={()=> this.props.navigation.navigate('RecommendRecord')}>
-             <View style={{padding:10,backgroundColor:'#FF7701',borderRadius:50}}>
-                  <Image
-                    style={styles.orderImg}
-                    source={require('../../images/group/jilu.png')}
-                  />
-                </View>
-             <Text>推荐记录</Text>
-           </TouchableOpacity>
-         </View>
           <View>
             <Text style={styles.buttomTitle}>广东顺德迪吉凯电子商务有限公司</Text>
           </View>
@@ -330,91 +344,96 @@ export default class App extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  top:{
+  top: {
     //flex: 0.55,
     width: '100%',
     alignItems: 'center',
-    height:150,
+    paddingBottom:10,
   },
-  content:{
+  content: {
     //flex:0.40,
   },
+  name:{
+    flexDirection: 'row',
+    justifyContent: 'center', 
+    alignItems: 'center' ,
+  },
   button: {
-    justifyContent:'center',
-    alignItems:'center',
+    justifyContent: 'center',
+    alignItems: 'center',
     textAlign: 'center',
     borderRadius: 10,
-    width: 50,
     fontSize: 10,
-    height:20,
+    height: 20,
   },
-  ImageBackground:{
-    flex:1,
-    width:'100%',
-    height:'100%',
+  ImageBackground: {
+    flex: 1,
+    width: '100%',
+    height: '100%',
   },
-  orderList:{
-    padding:10,
+  orderList: {
+    padding: 10,
     flexDirection: 'row',
-    flexWrap:'wrap'
+    flexWrap: 'wrap'
   },
-  orderItem:{
-    width:'25%',
+  orderItem: {
+    width: '25%',
     color: '#FF7A01',
     textAlign: 'center',
     fontSize: 10,
     padding: 3,
     alignItems: 'center',
   },
-  orderImg:{
-    width:35,
-    height:35,
+  orderImg: {
+    width: 35,
+    height: 35,
   },
-  logicItem:{
+  logicItem: {
     flexDirection: 'row',
-    padding:10,
+    padding: 10,
     backgroundColor: '#f5f5f5',
   },
-  logicLeft:{
+  logicLeft: {
 
   },
-  loginImg:{
-    width:35,
-    height:35,
+  loginImg: {
+    width: 35,
+    height: 35,
     marginLeft: 5,
-    marginRight:5,
+    marginRight: 5,
   },
-  topList:{
-    flexDirection:'row',
-    alignItems:'center',
+  topList: {
+    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-evenly',
+    marginBottom:10,
   },
-  topItem:{
-    width:'33%',
-    justifyContent:'center',
-    alignItems:'center',
-  
+  topItem: {
+    width: '33%',
+    justifyContent: 'center',
+    alignItems: 'center',
+
   },
-  topImg:{
-    width:50,
-    height:50,
-    marginBottom:2,
+  topImg: {
+    width: 50,
+    height: 50,
+    marginBottom: 2,
   },
-  withdraw:{
-    position:'absolute',
-    top:10,
-    right:10,
-    flexDirection:'row',
-    marginTop:25,
-  },
-  miandanImg:{
-   width:width*0.4, 
-   height:width*0.4/1.793,
-  },
-  buttomTitle:{
+  withdraw: {
+    position: 'absolute',
+    flexDirection: 'row',
     width:'100%',
-    textAlign:'center',
-    paddingTop:50,
-    color:'#666666',
+    justifyContent:'flex-end'
+  },
+  miandanImg: {
+    width: width * 0.4,
+    height: width * 0.4 / 1.793,
+  },
+  buttomTitle: {
+    width: '100%',
+    textAlign: 'center',
+    paddingTop: 50,
+    color: '#666666',
+    paddingBottom: 10,
   }
 })
