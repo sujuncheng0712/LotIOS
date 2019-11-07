@@ -42,7 +42,23 @@ export default class App extends React.Component {
   // render创建之前
   componentWillMount() {
     // 验证/读取 登陆状态
+    BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
+  }
 
+  componentWillUnmount() {
+    BackHandler.removeEventListener('hardwareBackPress', this.onBackAndroid);
+  }
+
+  onBackAndroid = () => {
+    if (this.props.navigation.isFocused()) {
+      if (this.lastBackPressed && this.lastBackPressed + 2000 >= Date.now()) {
+        //最近2秒内按过back键，可以退出应用。
+        BackHandler.exitApp();
+      }
+      this.lastBackPressed = Date.now();
+      Toast.show('再按一次退出应用');
+      return true;
+    }
   }
 
   // 验证本地存储的资料是否有效
