@@ -328,13 +328,13 @@ export default class App extends React.Component {
       console.warn(err);
       return;
     }
-   Linking.openURL('https://sj.qq.com/myapp/detail.htm?apkName=com.ssys')
+   Linking.openURL('http://iot.dochen.cn/app-release.apk')
   }
-
+            
   render() {
     const {lists,visable} = this.state;
     return (
-      <View style={{flex:1}}>
+      <View style={{flex:1}}>               
         <View style={{height:width/1.7}}>
           <Swiper
             style={styles.wrapper}
@@ -473,7 +473,7 @@ export default class App extends React.Component {
           </ScrollView>
           
         </View>
-        {/* {visable === true ?
+        {visable === true ?
           <View style={styles.scan}>
             <View style={styles.model}>
                 <Text style={styles.modelTitle}>物联汇新版震撼发布</Text>
@@ -498,7 +498,7 @@ export default class App extends React.Component {
             </View>
             
          </View>  :<Text></Text>
-        } */}
+        }
        
       </View>
     );
