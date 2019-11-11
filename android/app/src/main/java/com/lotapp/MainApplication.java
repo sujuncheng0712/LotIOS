@@ -1,4 +1,4 @@
-package com.lotios;
+package com.lotapp;
 
 import android.app.Application;
 import android.content.Context;

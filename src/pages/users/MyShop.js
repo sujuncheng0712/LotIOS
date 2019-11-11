@@ -53,7 +53,7 @@ export default class App extends React.Component {
         BackHandler.exitApp();
       }
       this.lastBackPressed = Date.now();
-      Toast.show('请选择商品！');
+      Toast.show('再按一次退出应用');
       return true;
     }
   }

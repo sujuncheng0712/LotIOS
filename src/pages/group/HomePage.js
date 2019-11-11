@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, View, Text, StyleSheet, AsyncStorage, Image, TouchableOpacity, Dimensions, Platform, Linking } from 'react-native';
+import { ScrollView, View, Text, StyleSheet, AsyncStorage, Image, TouchableOpacity, Dimensions, Platform, Linking,BackHandler } from 'react-native';
 import { Echarts, echarts } from 'react-native-secharts';
 import _updateConfig from '../../../update.json'
 const { appKey } = _updateConfig[Platform.OS];
@@ -41,7 +41,6 @@ export default class App extends React.Component {
 
   // render创建之前
   componentWillMount() {
-    // 验证/读取 登陆状态
     BackHandler.addEventListener('hardwareBackPress', this.onBackAndroid);
   }
 

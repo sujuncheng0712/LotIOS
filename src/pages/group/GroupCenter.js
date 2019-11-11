@@ -7,7 +7,7 @@ import {
   ImageBackground,
   StyleSheet,
   TouchableOpacity,
-  ScrollView,Dimensions,Platform
+  ScrollView,Dimensions,Platform,BackHandler
 } from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
 const {height,width} =  Dimensions.get('window');

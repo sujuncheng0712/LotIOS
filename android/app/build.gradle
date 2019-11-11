@@ -128,7 +128,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "com.lotios"
+        applicationId "com.lotapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

@@ -1,4 +1,4 @@
-package com.lotios;
+package com.lotapp;
 
 import com.facebook.react.ReactActivity;
 

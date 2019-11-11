@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, TouchableOpacity, AsyncStorage,ScrollView,StyleSheet,DeviceEventEmitter,Platform,Dimensions} from 'react-native';
+import {View, Text, TouchableOpacity, AsyncStorage,ScrollView,StyleSheet,DeviceEventEmitter,Platform,Dimensions,BackHandler} from 'react-native';
 const url = 'https://iot2.dochen.cn/api';
 const {height,width} =  Dimensions.get('window');
 // iPhoneX
